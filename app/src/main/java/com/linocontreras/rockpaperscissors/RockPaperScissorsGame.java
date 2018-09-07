@@ -12,16 +12,16 @@ public class RockPaperScissorsGame {
         random = new Random();
     }
 
-    public String play(int c){
+    public int play(int c){
         computer = random.nextInt(3);
         if(computer == c){
-            return "It's a tie";
+            return 0;
         } else if(computer == c - 1 || computer == c + 2){
             playerScore++;
-            return "Player wins!";
+            return 1;
         } else{
             computerScore++;
-            return "Computer wins!";
+            return 2;
         }
 
     }

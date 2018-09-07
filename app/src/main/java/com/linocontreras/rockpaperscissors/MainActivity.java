@@ -1,5 +1,6 @@
 package com.linocontreras.rockpaperscissors;
 
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,10 +22,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     RockPaperScissorsGame game;
 
+    Vibrator vibrator;
+
+    long pattern[] = {50, 400, 50, 400, 50};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         game = new RockPaperScissorsGame();
 
@@ -50,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public void vibrate(){
+        vibrator.vibrate(pattern, -1);
+    }
+
     public void updateGUI(){
         player_score.setText("Player: " + game.getPlayerScore());
         computer_score.setText("Computer: " + game.getComputerScore());
@@ -59,15 +69,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v){
-        Toast message = Toast.makeText(getApplicationContext(), "This is weird", Toast.LENGTH_SHORT);
+        int choice, result;
         if(v == rock){
-            message = Toast.makeText(getApplicationContext(), game.play(0), Toast.LENGTH_SHORT);
+            choice = 0;
         } else if(v == paper){
-            message = Toast.makeText(getApplicationContext(), game.play(1), Toast.LENGTH_SHORT);
-        } else if(v == scissors){
-            message = Toast.makeText(getApplicationContext(), game.play(2), Toast.LENGTH_SHORT);
+            choice = 1;
+        } else {
+            choice = 2;
         }
-        message.show();
+
+        result = game.play(choice);
+
+        if(result == 1){
+            Toast.makeText(getApplicationContext(), "Player wins!", Toast.LENGTH_SHORT).show();
+            vibrate();
+        } else if(result == 2){
+            Toast.makeText(getApplicationContext(), "Computer wins!", Toast.LENGTH_SHORT).show();
+        } else{
+            Toast.makeText(getApplicationContext(), "It's a tie!", Toast.LENGTH_SHORT).show();
+        }
         updateGUI();
     }
 
